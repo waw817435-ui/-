@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>間違い探し回答フォーム</title>
+
+<style>
+body{
+  font-family: sans-serif;
+  text-align:center;
+  padding:20px;
+  background:linear-gradient(135deg,#fdfbfb,#ebedee);
+}
+
+.container{
+  background:white;
+  padding:25px;
+  border-radius:15px;
+  max-width:420px;
+  margin:auto;
+  box-shadow:0 8px 20px rgba(0,0,0,0.1);
+}
+
+input{
+  width:90%;
+  padding:10px;
+  margin:8px 0;
+  border-radius:8px;
+  border:1px solid #ccc;
+  font-size:16px;
+}
+
+button{
+  padding:12px 25px;
+  background:#ff6b6b;
+  color:white;
+  border:none;
+  border-radius:10px;
+  font-size:16px;
+  cursor:pointer;
+}
+
+.result{
+  margin-top:20px;
+  font-size:18px;
+  font-weight:bold;
+}
+
+.correct-list{
+  margin-top:10px;
+  font-size:14px;
+  color:#555;
+}
+
+.celebrate{
+  font-size:28px;
+  margin-top:15px;
+  animation:pop 0.6s ease infinite alternate;
+}
+
+@keyframes pop{
+  from{transform:scale(1);}
+  to{transform:scale(1.1);}
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+<h2>🔍 間違い探し</h2>
+<p>見つけた間違いを5つ入力してください</p>
+
+<input type="text" id="a1" placeholder="①">
+<input type="text" id="a2" placeholder="②">
+<input type="text" id="a3" placeholder="③">
+<input type="text" id="a4" placeholder="④">
+<input type="text" id="a5" placeholder="⑤">
+
+<br>
+<button onclick="checkAnswers()">送信</button>
+
+<div class="result" id="result"></div>
+<div class="correct-list" id="correctList"></div>
+<div id="celebration"></div>
+</div>
+
+<script>
+
+// ★ここに正解を入れる（ひらがなで統一がおすすめ）
+const correctAnswers = ["りんご","ねこ","あか","くるま","ほし"];
+
+// ひらがなに変換する関数
+function toHiragana(str){
+  return str.replace(/[ァ-ン]/g, function(s){
+    return String.fromCharCode(s.charCodeAt(0) - 0x60);
+  });
+}
+
+function checkAnswers(){
+
+  let userAnswers = [
+    document.getElementById("a1").value.trim(),
+    document.getElementById("a2").value.trim(),
+    document.getElementById("a3").value.trim(),
+    document.getElementById("a4").value.trim(),
+    document.getElementById("a5").value.trim()
+  ];
+
+  // ひらがな化＋空白削除
+  userAnswers = userAnswers
+    .map(a => toHiragana(a.toLowerCase()))
+    .filter(a => a !== "");
+
+  // 重複削除
+  userAnswers = [...new Set(userAnswers)];
+
+  let score = 0;
+
+  userAnswers.forEach(answer => {
+    if(correctAnswers.includes(answer)){
+      score++;
+    }
+  });
+
+  document.getElementById("result").innerHTML =
+    "あなたの点数は " + score + " / 5 点です！";
+
+  document.getElementById("correctList").innerHTML =
+    "正解一覧： " + correctAnswers.join("、");
+
+  // 🎉 全問正解演出
+  if(score === correctAnswers.length){
+    document.getElementById("celebration").innerHTML =
+      '<div class="celebrate">🎉🎉 おめでとう！！全問正解！！ 🎉🎉</div>';
+  }else{
+    document.getElementById("celebration").innerHTML = "";
+  }
+
+}
+
+</script>
+
+</body>
+</html>
