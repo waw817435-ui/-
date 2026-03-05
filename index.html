@@ -69,14 +69,14 @@ button{
 <body>
 
 <div class="container">
-<h2>🔍 間違い探し</h2>
-<p>見つけた間違いを5つ入力してください</p>
+<h2>🔍 漢検2級</h2>
+<p>読み方を5つ入力してください</p>
 
-<input type="text" id="a1" placeholder="①">
-<input type="text" id="a2" placeholder="②">
-<input type="text" id="a3" placeholder="③">
-<input type="text" id="a4" placeholder="④">
-<input type="text" id="a5" placeholder="⑤">
+<input type="text" id="a1漸次" placeholder="①">
+<input type="text" id="a2便宜" placeholder="②">
+<input type="text" id="a3追従" placeholder="③">
+<input type="text" id="a4苦汁" placeholder="④">
+<input type="text" id="a5包括" placeholder="⑤">
 
 <br>
 <button onclick="checkAnswers()">送信</button>
@@ -89,7 +89,7 @@ button{
 <script>
 
 // ★ここに正解を入れる（ひらがなで統一がおすすめ）
-const correctAnswers = ["りんご","ねこ","あか","くるま","ほし"];
+const correctAnswers = ["ぜんじ","べんぎ","ついしょう","くじゅう","ほうかつ"];
 
 // ひらがなに変換する関数
 function toHiragana(str){
@@ -101,11 +101,11 @@ function toHiragana(str){
 function checkAnswers(){
 
   let userAnswers = [
-    document.getElementById("a1").value.trim(),
-    document.getElementById("a2").value.trim(),
-    document.getElementById("a3").value.trim(),
-    document.getElementById("a4").value.trim(),
-    document.getElementById("a5").value.trim()
+    document.getElementById("a1漸次").value.trim(),
+    document.getElementById("a2便宜").value.trim(),
+    document.getElementById("a3追従").value.trim(),
+    document.getElementById("a4苦汁").value.trim(),
+    document.getElementById("a5包括").value.trim()
   ];
 
   // ひらがな化＋空白削除
