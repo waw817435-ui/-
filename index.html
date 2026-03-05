@@ -1,13 +1,14 @@
+```html
 <!DOCTYPE html>
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>間違い探し回答フォーム</title>
+<title>漢字読みクイズ</title>
 
 <style>
 body{
-  font-family: sans-serif;
+  font-family:sans-serif;
   text-align:center;
   padding:20px;
   background:linear-gradient(135deg,#fdfbfb,#ebedee);
@@ -22,10 +23,15 @@ body{
   box-shadow:0 8px 20px rgba(0,0,0,0.1);
 }
 
+.question{
+  font-size:18px;
+  margin:8px 0;
+}
+
 input{
   width:90%;
   padding:10px;
-  margin:8px 0;
+  margin:6px 0 12px 0;
   border-radius:8px;
   border:1px solid #ccc;
   font-size:16px;
@@ -53,90 +59,142 @@ button{
   color:#555;
 }
 
-.celebrate{
-  font-size:28px;
-  margin-top:15px;
-  animation:pop 0.6s ease infinite alternate;
+/* 満点画面 */
+
+.perfect-screen{
+  display:none;
+  text-align:center;
+  padding:40px;
+}
+
+.perfect-title{
+  font-size:40px;
+  font-weight:bold;
+  color:#ff4d6d;
+  margin-bottom:20px;
+}
+
+.perfect-text{
+  font-size:20px;
+}
+
+.confetti{
+  font-size:30px;
+  animation:pop 0.6s infinite alternate;
 }
 
 @keyframes pop{
   from{transform:scale(1);}
-  to{transform:scale(1.1);}
+  to{transform:scale(1.2);}
 }
 </style>
 </head>
 
 <body>
 
-<div class="container">
-<h2>🔍 漢検2級</h2>
-<p>1.漸次 2.便宜 3.追従 4.苦汁 5.包括　この漢字の読み方を入力してください。</p>
+<div class="container" id="quiz">
 
-<input type="text" id="a1" placeholder="①">
-<input type="text" id="a2" placeholder="②">
-<input type="text" id="a3" placeholder="③">
-<input type="text" id="a4" placeholder="④">
-<input type="text" id="a5" placeholder="⑤">
+<h2>📚 漢字読みクイズ</h2>
+<p>次の漢字の読みを入力してください</p>
+
+<div class="question">① 漸次</div>
+<input type="text" id="a1">
+
+<div class="question">② 苦汁</div>
+<input type="text" id="a2">
+
+<div class="question">③ 包括</div>
+<input type="text" id="a3">
+
+<div class="question">④ 追従</div>
+<input type="text" id="a4">
+
+<div class="question">⑤ 便宜</div>
+<input type="text" id="a5">
 
 <br>
 <button onclick="checkAnswers()">送信</button>
 
 <div class="result" id="result"></div>
 <div class="correct-list" id="correctList"></div>
-<div id="celebration"></div>
+
 </div>
+
+
+<!-- 満点専用画面 -->
+
+<div class="perfect-screen" id="perfect">
+
+<div class="confetti">🎉🎉🎉</div>
+
+<div class="perfect-title">
+全問正解！！
+</div>
+
+<div class="perfect-text">
+おめでとうございます！<br>
+あなたは漢字マスターです🏆
+</div>
+
+<br>
+<div class="confetti">🎊🎊🎊</div>
+
+</div>
+
 
 <script>
 
-// ★ここに正解を入れる（ひらがなで統一がおすすめ）
-const correctAnswers = ["ぜんじ","べんぎ","ついしょう","くじゅう","ほうかつ"];
+const correctAnswers=[
+"ぜんじ",
+"くじゅう",
+"ほうかつ",
+"ついしょう",
+"べんぎ"
+];
 
-// ひらがなに変換する関数
 function toHiragana(str){
-  return str.replace(/[ァ-ン]/g, function(s){
-    return String.fromCharCode(s.charCodeAt(0) - 0x60);
-  });
+return str.replace(/[ァ-ン]/g,function(s){
+return String.fromCharCode(s.charCodeAt(0)-0x60);
+});
 }
 
 function checkAnswers(){
 
-  let userAnswers = [
-    document.getElementById("a1漸次").value.trim(),
-    document.getElementById("a2便宜").value.trim(),
-    document.getElementById("a3追従").value.trim(),
-    document.getElementById("a4苦汁").value.trim(),
-    document.getElementById("a5包括").value.trim()
-  ];
+let userAnswers=[
+document.getElementById("a1").value,
+document.getElementById("a2").value,
+document.getElementById("a3").value,
+document.getElementById("a4").value,
+document.getElementById("a5").value
+];
 
-  // ひらがな化＋空白削除
-  userAnswers = userAnswers
-    .map(a => toHiragana(a.toLowerCase()))
-    .filter(a => a !== "");
+let score=0;
 
-  // 重複削除
-  userAnswers = [...new Set(userAnswers)];
+userAnswers.forEach((ans,index)=>{
 
-  let score = 0;
+ans=ans.trim().toLowerCase();
+ans=toHiragana(ans);
 
-  userAnswers.forEach(answer => {
-    if(correctAnswers.includes(answer)){
-      score++;
-    }
-  });
+if(ans===correctAnswers[index]){
+score++;
+}
 
-  document.getElementById("result").innerHTML =
-    "あなたの点数は " + score + " / 5 点です！";
+});
 
-  document.getElementById("correctList").innerHTML =
-    "正解一覧： " + correctAnswers.join("、");
+if(score===5){
 
-  // 🎉 全問正解演出
-  if(score === correctAnswers.length){
-    document.getElementById("celebration").innerHTML =
-      '<div class="celebrate">🎉🎉 おめでとう！！全問正解！！ 🎉🎉</div>';
-  }else{
-    document.getElementById("celebration").innerHTML = "";
-  }
+document.getElementById("quiz").style.display="none";
+document.getElementById("perfect").style.display="block";
+
+}else{
+
+document.getElementById("result").innerHTML=
+"あなたの点数は "+score+" / 5 点です";
+
+document.getElementById("correctList").innerHTML=
+"正解：①ぜんじ　②くじゅう　③ほうかつ　④ついしょう　⑤べんぎ";
+
+}
 
 }
 
@@ -144,3 +202,4 @@ function checkAnswers(){
 
 </body>
 </html>
+```
